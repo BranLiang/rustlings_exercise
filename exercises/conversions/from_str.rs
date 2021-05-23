@@ -11,7 +11,6 @@ struct Person {
     age: usize,
 }
 
-// I AM NOT DONE
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -26,6 +25,25 @@ struct Person {
 impl FromStr for Person {
     type Err = Box<dyn error::Error>;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.len() == 0 {
+            return Err("No input is given!".into());
+        }
+        let s = String::from(s);
+        if let Some((name, age)) = s.split_once(',') {
+            if name.len() == 0 {
+                return Err("No name given!".into());
+            }
+            if let Ok(age) = age.parse::<usize>() {
+                Ok(Person {
+                    name: String::from(name),
+                    age
+                })
+            } else {
+                Err("Invalid age!".into())
+            }
+        } else {
+            Err("Invalid name or age!".into())
+        }
     }
 }
 
